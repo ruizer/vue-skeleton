@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { resolve } = require('path');
+const htmlMinifier = require('html-minifier');
 
 const createBundleRenderer = require('vue-server-renderer').createBundleRenderer;
 
@@ -34,6 +35,10 @@ const writeFile = function (fileName, data) {
 
   // 把上一步模板完成的内容写入（替换）`index.html`
   renderer.renderToString({}, (err, html) => {
+    html = htmlMinifier.minify(html, {
+      collapseWhitespace: true,
+      minifyCSS: true
+    });
     fs.writeFileSync('index.html', html, 'utf-8')
   });
 })();
